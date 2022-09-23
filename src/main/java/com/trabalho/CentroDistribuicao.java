@@ -32,9 +32,9 @@ public class CentroDistribuicao {
     }
 
     public void defineSituacao() {
-        
-        if (MAX_ADITIVO1 < (MAX_ADITIVO * 25)/100 || MAX_GASOLINA1 < (MAX_GASOLINA * 25)/100
-                || (MAX_ALCOOL1 + MAX_ALCOOL2) < (MAX_ALCOOL * 25)/100) {
+
+        if (MAX_ADITIVO1 < (MAX_ADITIVO * 25) / 100 || MAX_GASOLINA1 < (MAX_GASOLINA * 25) / 100
+                || (MAX_ALCOOL1 + MAX_ALCOOL2) < (MAX_ALCOOL * 25) / 100) {
             setSituacao(SITUACAO.EMERGENCIA);
             return;
         }
@@ -93,13 +93,9 @@ public class CentroDistribuicao {
         if ((MAX_ALCOOL1 + qtdade + MAX_ALCOOL2) > MAX_ALCOOL || qtdade < 0) {
             return -1;
         }
-        if (MAX_ALCOOL1 + qtdade <= (MAX_ALCOOL / 2)) {
-            MAX_ALCOOL1 += qtdade;
-            return MAX_ALCOOL1 - MAX_ALCOOL;
-        } else {
-            MAX_ALCOOL2 += qtdade;
-            return MAX_ALCOOL - MAX_ALCOOL2;
-        }
+        MAX_ALCOOL1 += qtdade / 2;
+        MAX_ALCOOL2 += qtdade / 2;
+        return MAX_ALCOOL - (MAX_ALCOOL1 + MAX_ALCOOL2);
     }
 
     public int[] encomendaCombustivel(int qtdade, TIPOPOSTO tipoPosto) {
@@ -108,12 +104,11 @@ public class CentroDistribuicao {
         int auxAlcool = ((qtdade * 25) / 100);
         int auxGasolina = ((qtdade * 70) / 100);
         int auxAdtivo = 0;
-        if(qtdade < 40 && qtdade > 10){
+        if (qtdade < 40 && qtdade > 10) {
             auxAdtivo = 1;
-        }else{
+        } else {
             auxAdtivo = ((qtdade * 5) / 100);
         }
-        
 
         if (qtdade <= 0) {
             qtdCombustivel[0] = -7;
@@ -138,32 +133,14 @@ public class CentroDistribuicao {
                 qtdCombustivel[0] = (MAX_ADITIVO1);
                 qtdCombustivel[1] = (MAX_GASOLINA1);
 
-                if (MAX_ALCOOL1 >= auxAlcool) {
-                    MAX_ALCOOL1 -= auxAlcool;
-                    qtdCombustivel[2] = (MAX_ALCOOL1);
-                    qtdCombustivel[3] = (MAX_ALCOOL2);
-                    defineSituacao();
-                    return qtdCombustivel;
-                }
-                if (MAX_ALCOOL2 >= auxAlcool) {
-                    MAX_ALCOOL2 -= auxAlcool;
-                    qtdCombustivel[2] = (MAX_ALCOOL1);
-                    qtdCombustivel[3] = (MAX_ALCOOL2);
-                    defineSituacao();
-                    return qtdCombustivel;
-                } else if ((MAX_ALCOOL1 + MAX_ALCOOL2) >= auxAlcool) {
-                    for (int j = auxAlcool; j > 0; j--) {
-                        if (MAX_ALCOOL1 > 0) {
-                            MAX_ALCOOL1--;
-                        } else {
-                            MAX_ALCOOL2--;
-                        }
-                    }
-                    qtdCombustivel[2] = MAX_ALCOOL1;
-                    qtdCombustivel[3] = MAX_ALCOOL2;
-                    defineSituacao();
-                    return qtdCombustivel;
-                }
+                MAX_ALCOOL1 = MAX_ALCOOL1 - auxAlcool / 2;
+                MAX_ALCOOL2 = MAX_ALCOOL2 - auxAlcool / 2;
+
+                qtdCombustivel[2] = MAX_ALCOOL1;
+                qtdCombustivel[3] = MAX_ALCOOL2;
+                defineSituacao();
+                return qtdCombustivel;
+
             }
             if (situacao == SITUACAO.SOBRAVISO) {
                 auxAlcool = ((qtdade * 25) / 100) / 2;
@@ -174,32 +151,16 @@ public class CentroDistribuicao {
                 MAX_ADITIVO1 = MAX_ADITIVO1 - auxAdtivo;
                 qtdCombustivel[0] = (MAX_ADITIVO1);
                 qtdCombustivel[1] = (MAX_GASOLINA1);
-                if (MAX_ALCOOL1 >= auxAlcool) {
-                    MAX_ALCOOL1 -= auxAlcool;
-                    qtdCombustivel[2] = MAX_ALCOOL1;
-                    qtdCombustivel[3] = (MAX_ALCOOL2);
-                    defineSituacao();
-                    return qtdCombustivel;
-                }
-                if (MAX_ALCOOL2 >= auxAlcool) {
-                    MAX_ALCOOL2 -= auxAlcool;
-                    qtdCombustivel[2] = (MAX_ALCOOL1);
-                    qtdCombustivel[3] = MAX_ALCOOL2;
-                    defineSituacao();
-                    return qtdCombustivel;
-                } else if ((MAX_ALCOOL1 + MAX_ALCOOL2) >= auxAlcool) {
-                    for (int j = auxAlcool; j > 0; j--) {
-                        if (MAX_ALCOOL1 > 0) {
-                            MAX_ALCOOL1--;
-                        } else {
-                            MAX_ALCOOL2--;
-                        }
-                    }
+                MAX_ALCOOL1 = MAX_ALCOOL1 - auxAlcool / 2;
+                MAX_ALCOOL2 = MAX_ALCOOL2 - auxAlcool / 2;
+                
+                qtdCombustivel[2] = MAX_ALCOOL1;
+                qtdCombustivel[3] = MAX_ALCOOL2;
                     qtdCombustivel[2] = MAX_ALCOOL1;
                     qtdCombustivel[3] = MAX_ALCOOL2;
                     defineSituacao();
                     return qtdCombustivel;
-                }
+                
 
             }
         }
@@ -210,33 +171,13 @@ public class CentroDistribuicao {
                 MAX_ADITIVO1 = MAX_ADITIVO1 - auxAdtivo;
                 qtdCombustivel[0] = (MAX_ADITIVO1);
                 qtdCombustivel[1] = (MAX_GASOLINA1);
-                if (MAX_ALCOOL1 >= auxAlcool) {
-                    MAX_ALCOOL1 -= auxAlcool;
-                    qtdCombustivel[2] = (MAX_ALCOOL1);
-                    qtdCombustivel[3] = (MAX_ALCOOL2);
-                    defineSituacao();
-                    return qtdCombustivel;
-                }
-                if (MAX_ALCOOL2 >= auxAlcool) {
-                    MAX_ALCOOL2 -= auxAlcool;
-                    qtdCombustivel[2] = (MAX_ALCOOL1);
-                    qtdCombustivel[3] = (MAX_ALCOOL2);
-                    defineSituacao();
-                    return qtdCombustivel;
-                } else if ((MAX_ALCOOL1 + MAX_ALCOOL2) >= auxAlcool) {
-                    for (int j = auxAlcool; j > 0; j--) {
-                        if (MAX_ALCOOL1 > 0) {
-                            MAX_ALCOOL1--;
-                        } else {
-                            MAX_ALCOOL2--;
-                        }
-                    }
-                    qtdCombustivel[2] = MAX_ALCOOL1;
-                    qtdCombustivel[3] = MAX_ALCOOL2;
-                    defineSituacao();
-                    return qtdCombustivel;
-                }
+                MAX_ALCOOL1 = MAX_ALCOOL1 - auxAlcool / 2;
+                MAX_ALCOOL2 = MAX_ALCOOL2 - auxAlcool / 2;
 
+                qtdCombustivel[2] = MAX_ALCOOL1;
+                qtdCombustivel[3] = MAX_ALCOOL2;
+                defineSituacao();
+                return qtdCombustivel;
             }
             if (situacao == SITUACAO.EMERGENCIA) {
                 auxAlcool = ((qtdade * 25) / 100) / 2;
@@ -247,33 +188,13 @@ public class CentroDistribuicao {
                 MAX_ADITIVO1 = MAX_ADITIVO1 - auxAdtivo;
                 qtdCombustivel[0] = (MAX_ADITIVO1);
                 qtdCombustivel[1] = (MAX_GASOLINA1);
-                if (MAX_ALCOOL1 >= auxAlcool) {
-                    MAX_ALCOOL1 -= auxAlcool;
-                    qtdCombustivel[2] = (MAX_ALCOOL1);
-                    qtdCombustivel[3] = (MAX_ALCOOL2);
-                    defineSituacao();
-                    return qtdCombustivel;
-                }
-                if (MAX_ALCOOL2 >= auxAlcool) {
-                    MAX_ALCOOL2 -= auxAlcool;
-                    qtdCombustivel[2] = (MAX_ALCOOL1);
-                    qtdCombustivel[3] = (MAX_ALCOOL2);
-                    defineSituacao();
-                    return qtdCombustivel;
-                } else if ((MAX_ALCOOL1 + MAX_ALCOOL2) >= auxAlcool) {
-                    for (int j = auxAlcool; j > 0; j--) {
-                        if (MAX_ALCOOL1 > 0) {
-                            MAX_ALCOOL1--;
-                        } else {
-                            MAX_ALCOOL2--;
-                        }
-                    }
-                    qtdCombustivel[2] = MAX_ALCOOL1;
-                    qtdCombustivel[3] = MAX_ALCOOL2;
-                    defineSituacao();
-                    return qtdCombustivel;
-                }
+                MAX_ALCOOL1 = MAX_ALCOOL1 - auxAlcool / 2;
+                MAX_ALCOOL2 = MAX_ALCOOL2 - auxAlcool / 2;
 
+                qtdCombustivel[2] = MAX_ALCOOL1;
+                qtdCombustivel[3] = MAX_ALCOOL2;
+                defineSituacao();
+                return qtdCombustivel;
             }
         }
 
