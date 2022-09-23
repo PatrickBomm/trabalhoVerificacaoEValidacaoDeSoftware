@@ -72,8 +72,8 @@ public class CentroDistribuicao {
     }
 
     public int recebeAditivo(int qtdade) {
-        if (MAX_ADITIVO1 + qtdade > MAX_ADITIVO || qtdade < 0) {
-            return -1;
+        if (MAX_ADITIVO1 + qtdade > MAX_ADITIVO || qtdade <= 0) {
+            throw new IllegalNumberException();
         } else {
             MAX_ADITIVO1 += qtdade;
             return MAX_ADITIVO - MAX_ADITIVO1;
@@ -81,8 +81,8 @@ public class CentroDistribuicao {
     }
 
     public int recebeGasolina(int qtdade) {
-        if (MAX_GASOLINA1 + qtdade > MAX_GASOLINA || qtdade < 0) {
-            return -1;
+        if (MAX_GASOLINA1 + qtdade > MAX_GASOLINA || qtdade <= 0) {
+            throw new IllegalNumberException();
         } else {
             MAX_GASOLINA1 += qtdade;
             return MAX_GASOLINA - MAX_GASOLINA1;
@@ -90,8 +90,8 @@ public class CentroDistribuicao {
     }
 
     public int recebeAlcool(int qtdade) {
-        if ((MAX_ALCOOL1 + qtdade + MAX_ALCOOL2) > MAX_ALCOOL || qtdade < 0) {
-            return -1;
+        if ((MAX_ALCOOL1 + qtdade + MAX_ALCOOL2) > MAX_ALCOOL || qtdade <= 0) {
+            throw new IllegalNumberException();
         }
         MAX_ALCOOL1 += qtdade / 2;
         MAX_ALCOOL2 += qtdade / 2;
@@ -114,14 +114,14 @@ public class CentroDistribuicao {
             qtdCombustivel[0] = -7;
             return qtdCombustivel;
         }
-
-        if (auxAlcool > (gettAlcool1() + gettAlcool2()) || auxGasolina > gettGasolina() || auxAdtivo > gettAditivo()) {
-            qtdCombustivel[0] = -21;
+        
+        if (tipoPosto == TIPOPOSTO.COMUM && situacao == SITUACAO.EMERGENCIA) {
+            qtdCombustivel[0] = -14;
             return qtdCombustivel;
         }
 
-        if (tipoPosto == TIPOPOSTO.COMUM && situacao == SITUACAO.EMERGENCIA) {
-            qtdCombustivel[0] = -14;
+        if (auxAlcool > (gettAlcool1() + gettAlcool2()) || auxGasolina > gettGasolina() || auxAdtivo > gettAditivo()) {
+            qtdCombustivel[0] = -21;
             return qtdCombustivel;
         }
 
@@ -199,5 +199,11 @@ public class CentroDistribuicao {
         }
 
         return qtdCombustivel;
+    }
+
+    public int getPorcentagemCombustivel() {
+        int porcentagem = 0;
+        porcentagem = (MAX_ADITIVO1 + MAX_ALCOOL1 + MAX_ALCOOL2 + MAX_GASOLINA1) * 100/ (MAX_ADITIVO1 + MAX_ALCOOL + MAX_GASOLINA);
+        return porcentagem;
     }
 }

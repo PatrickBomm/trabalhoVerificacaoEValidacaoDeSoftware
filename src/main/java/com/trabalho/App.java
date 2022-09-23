@@ -35,6 +35,7 @@ public class App {
                 System.out.println("Combustivel inicializado com: " + cd.gettGasolina() + " litros de gasolina, "
                         + cd.gettAditivo() + " litros de aditivo e " + (cd.gettAlcool1() + cd.gettAlcool2())
                         + " litros de alcool.");
+                cd.defineSituacao();
                 start = true;
                 break;
             }
@@ -49,7 +50,7 @@ public class App {
                 if (alcool < 0 || alcool > 2500) {
                     throw new IllegalNumberException();
                 }
-                System.out.println("DIESEL: ");
+                System.out.println("ADITIVO: ");
                 int diesel = sc.nextInt();
                 if (diesel < 0 || diesel > 500) {
                     throw new IllegalNumberException();
@@ -61,6 +62,8 @@ public class App {
                 System.out.println("Combustivel inicializado com: " + cd.gettGasolina() + " litros de gasolina, "
                         + cd.gettAditivo() + " litros de aditivo e " + (cd.gettAlcool1() + cd.gettAlcool2())
                         + " litros de alcool.");
+                cd.defineSituacao();
+
                 start = true;
                 break;
             }
@@ -95,6 +98,8 @@ public class App {
                             System.out.println("\nDigite a quantidade de aditivo que deseja adicionar: ");
                             int qtdAditivo = sc.nextInt();
                             int a = cd.recebeAditivo(qtdAditivo);
+                            cd.defineSituacao();
+
                             if (a < 0) {
                                 clearConsole();
                                 System.out.println("\nQuantidade inválida");
@@ -108,6 +113,8 @@ public class App {
                             System.out.println("\nDigite a quantidade de gasolina que deseja adicionar: ");
                             int qtdGasolina = sc.nextInt();
                             a = cd.recebeGasolina(qtdGasolina);
+                            cd.defineSituacao();
+
                             if (a < 0) {
                                 clearConsole();
                                 System.out.println("\nQuantidade inválida");
@@ -121,6 +128,8 @@ public class App {
                             System.out.println("\nDigite a quantidade de álcool que deseja adicionar: ");
                             int qtdAlcool = sc.nextInt();
                             a = cd.recebeAlcool(qtdAlcool);
+                            cd.defineSituacao();
+
                             if (a < 0) {
                                 clearConsole();
                                 System.out.println("\nQuantidade inválida");
@@ -141,6 +150,7 @@ public class App {
                             cd.recebeAlcool(auxAlcool2);
                             cd.recebeAditivo(auxAditivo);
                             clearConsole();
+                            cd.defineSituacao();
                             System.out.println("\nPosto reabastecido com sucesso!");
                             break;
                         case 0:
@@ -154,7 +164,7 @@ public class App {
                     break;
                 case 2:
                     clearConsole();
-                    System.out.println("\n\n\n\n\nDigite a quantidade de combustível que deseja retirar: ");
+                    System.out.println("\nDigite a quantidade de combustível que deseja retirar: ");
                     int qtdCombustivel = sc.nextInt();
                     if (qtdCombustivel < 10) {
                         System.out.println("Quantidade mínima de combustível a ser retirada é 10");
@@ -205,10 +215,12 @@ public class App {
                             if (a[0] == -7) {
                                 clearConsole();
                                 System.out.println("\nValor inválido");
+                                break;
                             }
                             if (a[0] == -21) {
                                 clearConsole();
                                 System.out.println("\nCombustível insuficiente");
+                                break;
                             }
                             if (cd.getSituacao() == CentroDistribuicao.SITUACAO.EMERGENCIA) {
                                 clearConsole();
@@ -243,16 +255,21 @@ public class App {
                     break;
                 case 4:
                     clearConsole();
-                    
-                    if(cd.getSituacao() == CentroDistribuicao.SITUACAO.NORMAL){
+
+                    if (cd.getSituacao() == CentroDistribuicao.SITUACAO.NORMAL) {
                         System.out.println("\nSituação atual do posto é: " + cd.getSituacao());
+                        System.out.println("Porcentagem de combustivel em relação ao total: "
+                                + cd.getPorcentagemCombustivel() + "%");
                         break;
                     }
-                    if(cd.getSituacao() == CentroDistribuicao.SITUACAO.SOBRAVISO || cd.getSituacao() == CentroDistribuicao.SITUACAO.EMERGENCIA){
-                        System.out.println("\nSituação atual do posto é de : " + cd.getSituacao() + "!");
+                    if (cd.getSituacao() == CentroDistribuicao.SITUACAO.SOBRAVISO
+                            || cd.getSituacao() == CentroDistribuicao.SITUACAO.EMERGENCIA) {
+                        System.out.println("\nSituação atual do posto é de: " + cd.getSituacao() + "!");
+                        System.out.println("Porcentagem de combustivel em relação ao total: "
+                                + cd.getPorcentagemCombustivel() + "%");
                         break;
                     }
-                   break;
+                    break;
                 case 0:
                     clearConsole();
                     exit = true;
